@@ -1,0 +1,6 @@
+@ApiRestABankMySql_HostAddress = http://localhost:5239
+
+GET {{ApiRestABankMySql_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

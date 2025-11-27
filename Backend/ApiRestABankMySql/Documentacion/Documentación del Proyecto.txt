@@ -1,0 +1,122 @@
+📘 Documentación del Proyecto – API REST C# .NET 8 con Dapper y MySQL
+📌 Descripción del Proyecto
+
+Esta es una API REST desarrollada con .NET 8, utilizando Dapper como ORM ligero y MySQL como base de datos.
+Incluye autenticación mediante JWT, un archivo de docker-compose para despliegue y pruebas con MySQL.
+
+🚀 Tecnologías Utilizadas
+
+.NET 8 Web API
+
+Dapper (persistencia de datos)
+
+MySQL 8
+
+JWT (Json Web Token)
+
+Docker / Docker Compose
+
+xUnit (para test unitarios – opcional)
+
+📁 Estructura del Proyecto
+ApiRestABankMySql/
+│── Controllers/
+│   └── UsuariosController.cs
+│   └── AuthController.cs
+│
+│── Service/
+│   └── UsuarioService.cs
+│   └── AuthService.cs
+│
+│── Models/
+│   └── Usuario.cs
+│
+│── Data/
+│   └── DapperContext.cs
+│
+│── appsettings.json
+│── Program.cs
+│── docker-compose.yml
+│── README.md
+
+⚙️ Configuración
+1️⃣ Configurar MySQL
+
+La API necesita la tabla usuarios:
+
+CREATE TABLE usuarios (
+  Id INT AUTO_INCREMENT PRIMARY KEY,
+  Nombres VARCHAR(100),
+  Apellidos VARCHAR(100),
+  FechaNacimiento DATE,
+  Direccion VARCHAR(200),
+  FechaCreacion DATETIME DEFAULT NOW()
+);
+
+2️⃣ Configuración del archivo appsettings.json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=mysql;Database=miapi;User=root;Password=123456;"
+  },
+
+  "Jwt": {
+    "Key": "A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6",
+    "Issuer": "ApiRestABank",
+    "Audience": "ApiRestABankUsers"
+  }
+}
+
+3️⃣ Registrar Servicios en Program.cs
+builder.Services.AddScoped<DapperContext>();
+builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<AuthService>();
+
+🔐 Autenticación JWT
+
+Para obtener un token debes llamar:
+
+POST /api/Auth/login
+
+
+Body (form-data o x-www-form-urlencoded):
+
+usuario=admin
+password=123
+
+
+Respuesta:
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+
+
+Usar en peticiones:
+
+Authorization: Bearer <token>
+
+📌 Endpoints Principales
+✔️ 1. Obtener todos los usuarios
+GET /api/usuarios
+
+✔️ 2. Obtener usuario por ID
+GET /api/usuarios/{id}
+
+✔️ 3. Crear usuario
+POST /api/usuarios
+
+
+Body JSON:
+
+{
+  "nombres": "José",
+  "apellidos": "Olivares",
+  "fechaNacimiento": "1990-01-01",
+  "direccion": "San Salvador"
+}
+
+✔️ 4. Actualizar usuario
+PUT /api/usuarios/{id}
+
+✔️ 5. Eliminar usuario
+DELETE /api/usuarios/{id}
